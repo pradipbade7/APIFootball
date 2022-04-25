@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Comp Page";
+}
+
+@model APIFootball.Models.CompetitionModel
+@{
+    string date = "";
+}
+<div class="row">
+    <section class="col-md-12">
+        <div class="row section title-divider">
+            <div class=" col-md-12">
+                <div class="row title">
+                    <div class="col-md-6">
+                        <h3>Select Competition</h3>
+                    </div>
+                </div>
+            </div>
+
+            @foreach (var item in Model.competitions)
+            {
+                <div class="col-md-4 col-lg-3 col-6 club">
+                    <a href="/Competition/@item.id" class="red-club">
+                        <div class="card">
+                            @*<img src="@item?.emblemUrl" class="card-img-top d-none d-sm-block" alt="">*@
+                            <img src="@item?.emblemUrl" class="clubs_logo rounded-circle" alt="">
+                            <div class="card-body">
+                                <h6 class="text-center text-white name-title">@item?.name</h6>
+                                <div class="btn btn-block btn-danger text-white">See Details</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+
+
+        </div>
+    </section>
+</div>

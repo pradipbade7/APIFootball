@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Comp Page";
+}
+
+@model APIFootball.Models.MatchModel
+
+<div class="row">
+    <section class="col-lg-12">
+        <div class="row section  title-divider">
+            <div class="col-md-12">
+                <div class="row">
+                    <h5>@Model.match.competition.name</h5>
+                </div>
+                <div class="row">
+                    <table class='table table-striped text-center fixture_table active'>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <span class="fixture-name">@Model.match.homeTeam.name</span>
+                                </td>
+                                <td>
+                                    <span class="fixture-time">@Model?.match.score.fullTime.homeTeam - @Model?.match.score.fullTime.awayTeam</span>
+                                </td>
+                                <td>
+                                    <span class="fixture-name">@Model.match.awayTeam.name</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>

@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Comp Page";
+}
+
+@model APIFootball.Models.NewsModel
+@{
+    string date = "";
+}
+<style>
+    td{
+        width:33%;
+    }
+</style>
+<div class="row">
+    <section class="col-lg-12">
+        <div class="row section  title-divider">
+            <div class=" col-md-12">
+                <div class="row title">
+                    <div class="col-md-6">
+                        <h3>News (@Model?.articles.Count)</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row section">
+                @for (var i = 0; i < Model?.articles.Count; i++)
+                {
+                    <div class="col-md-3 col-sm-6 col-12  news">
+                        <a href="@Model?.articles[i].url" target="_blank">
+                            @if (!string.IsNullOrEmpty(@Model?.articles[i].urlToImage))
+                            {
+                                <img src="@Model?.articles[i].urlToImage" class="transition newsimg" width="100%" alt="">
+                            }
+                            else
+                            {
+                                <img src="~/img/breakingnews.jpg" class="transition newsimg" width="100%" alt="">
+                            }
+
+                            <div class="description position-relative bg-white">
+                                <h5 class="heading">@Model?.articles[i].title</h5>
+                                @*<p class="detail">
+                                    @Model?.News.articles[i].content.Substring(0,100);
+                                </p>*@
+                            </div>
+                        </a>
+                    </div>
+                }
+
+            </div>
+
+        </div>
+    </section>
+</div>

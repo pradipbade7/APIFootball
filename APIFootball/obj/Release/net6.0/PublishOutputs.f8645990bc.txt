@@ -1,0 +1,8 @@
+C:\Users\pradi\source\repos\APIFootball\APIFootball\obj\Release\net6.0\PubTmp\Out\APIFootball.exe
+C:\Users\pradi\source\repos\APIFootball\APIFootball\obj\Release\net6.0\PubTmp\Out\appsettings.Development.json
+C:\Users\pradi\source\repos\APIFootball\APIFootball\obj\Release\net6.0\PubTmp\Out\appsettings.json
+C:\Users\pradi\source\repos\APIFootball\APIFootball\obj\Release\net6.0\PubTmp\Out\APIFootball.dll
+C:\Users\pradi\source\repos\APIFootball\APIFootball\obj\Release\net6.0\PubTmp\Out\APIFootball.deps.json
+C:\Users\pradi\source\repos\APIFootball\APIFootball\obj\Release\net6.0\PubTmp\Out\APIFootball.runtimeconfig.json
+C:\Users\pradi\source\repos\APIFootball\APIFootball\obj\Release\net6.0\PubTmp\Out\APIFootball.pdb
+C:\Users\pradi\source\repos\APIFootball\APIFootball\obj\Release\net6.0\PubTmp\Out\Newtonsoft.Json.dll

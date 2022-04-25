@@ -1,0 +1,278 @@
+﻿@{
+    ViewData["Title"] = "Comp Page";
+}
+
+@model APIFootball.Models.TeamDetailViewModel
+@{
+    string date = "";
+    string fixturecolor = "";
+}
+<style>
+    .fixtureslist td {
+        width: 33%;
+    }
+
+    .bold {
+        font-weight: bolder;
+        color: black;
+    }
+
+    .standing td {
+        color: #15222fc2;
+    }
+
+    .nodecoration {
+        text-decoration: none !important;
+        color: #15222fc2;
+    }
+
+    .clublist {
+        float: left;
+    }
+
+    .clubul {
+        list-style: none
+    }
+
+    .club-logo {
+        height: 8em;
+        width: auto;
+    }
+
+    .centeritems {
+        text-align: center
+    }
+
+    .squad-thead {
+        background: #66aa39f0;
+        color: white;
+    }
+</style>
+<div class="row">
+    <section class="col-md-12">
+        <div class="row section">
+            <div class="col-md-4 title-divider">
+                <div class="title centeritems">
+                    <h3 class="centeritems">
+                        @Model.TeamDetail.name
+                    </h3>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-lg-12 col-sm-4 centeritems">
+                            <img src="@Model.TeamDetail.crestUrl" class="club-logo" width="100%" alt="">
+                        </div>
+                        <div class="col-lg-12 col-sm-8 centeritems">
+                            <br class="d-none d-lg-block">
+                            <br class="d-none d-lg-block">
+                            <h6 class="clearfix">
+                                <span class="">@Model.TeamDetail.founded</span>
+                            </h6>
+                            <h6 class="clearfix">
+                                <span class="">@Model.TeamDetail.address</span>
+                            </h6>
+                            <h6 class="clearfix">
+                                <span class="">@Model.TeamDetail.venue</span>
+                            </h6>
+                            <h6 class="clearfix">
+                                <span class=""><a class="nodecoration" href="@Model.TeamDetail.website">@Model.TeamDetail.website</a></span>
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 title-divider">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="fixture-tab" data-toggle="tab" href="#fixture" role="tab" aria-controls="fixture" aria-selected="true">Fixtures</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="result-tab" data-toggle="tab" href="#result" role="tab" aria-controls="result" aria-selected="false">Results</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="squad-tab" data-toggle="tab" href="#squad" role="tab" aria-controls="squad" aria-selected="false">Squad</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="fixture" role="tabpanel" aria-labelledby="fixture-tab">
+                        <div class="row fixtureslist">
+                            @for (var i = 0; i < Model?.Fixtures.matches.Count; i++)
+                            {
+                                @if (i != 0 && date != Model?.Fixtures.matches[i].utcDate.ToString().Substring(0, 10))
+                                {
+                                    @Html.Raw("</tbody></table></div>")
+                                }
+                                @if (date != Model?.Fixtures.matches[i].utcDate.ToString().Substring(0, 10))
+                                {
+                                    @Html.Raw("<div class='col-md-12'>")
+                                    <h5 class="text-center fixture-result">@Model?.Fixtures.matches[i].utcDate.ToLocalTime().ToLongDateString()</h5>
+                                    @Html.Raw("<table class='table table-striped text-center fixture_table active'><tbody>")
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="fixture-name">@Model?.Fixtures.matches[i].homeTeam.name</span>
+                                        </td>
+                                        <td>
+                                            <span class="fixture-time">@Model?.Fixtures.matches[i].utcDate.ToLocalTime().ToShortTimeString()</span>
+                                        </td>
+                                        <td>
+                                            <span class="fixture-name">@Model?.Fixtures.matches[i].awayTeam.name</span>
+                                        </td>
+                                    </tr>
+                                }
+
+
+                                @if (date != Model?.Fixtures.matches[i].utcDate.ToString().Substring(0, 10))
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="fixture-name">@Model?.Fixtures.matches[i].homeTeam.name</span>
+                                        </td>
+                                        <td>
+                                            <span class="fixture-time">@Model?.Fixtures.matches[i].utcDate.ToLocalTime().ToShortTimeString()</span>
+                                        </td>
+                                        <td>
+                                            <span class="fixture-name">@Model?.Fixtures.matches[i].awayTeam.name</span>
+                                        </td>
+                                    </tr>
+
+                                }
+                                @if (i == Model?.Fixtures.matches.Count - 1)
+                                {
+                                    @Html.Raw("</tbody></table></div>")
+                                }
+                                date = Model?.Fixtures.matches[i].utcDate.ToString().Substring(0, 10);
+                            }
+                            @if (Model == null)
+                            {
+                                <div class="col-md-12">
+                                    <p>Fixtures are not available for this competition right now.</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="result" role="tabpanel" aria-labelledby="result-tab">
+                        <div class="row fixtureslist">
+                            @for (int i = (int)Model?.Results.matches.Count - 1; i >= 0; i--)
+                            {
+                                @if (Model?.Results.matches[i].score.winner == "HOME_TEAM" && Model?.Results.matches[i].homeTeam.id == Model?.TeamDetail.id)
+                                {
+                                    fixturecolor = "fixture-win";
+                                }
+                                else if (Model?.Results.matches[i].score.winner == "AWAY_TEAM" && Model?.Results.matches[i].awayTeam.id == Model?.TeamDetail.id)
+                                {
+                                    fixturecolor = "fixture-win";
+                                }
+                                else if (Model?.Results.matches[i].score.winner == "DRAW")
+                                {
+                                    fixturecolor = "fixture-draw";
+                                }
+                                else
+                                {
+                                    fixturecolor = "fixture-lose";
+                                }
+                                @if (i != (int)Model?.Results.matches.Count - 1 && date != Model?.Results.matches[i].utcDate.ToString().Substring(0, 10))
+                                {
+                                    @Html.Raw("</tbody></table></div>")
+                                }
+                                @if (date != Model?.Results.matches[i].utcDate.ToString().Substring(0, 10))
+                                {
+                                    @Html.Raw("<div class='col-md-12'>")
+                                    <h5 class="text-center fixture-result">
+                                        @Model?.Results.matches[i].utcDate.ToLocalTime().ToLongDateString()</h5>
+                                    @Html.Raw("<table class='table table-striped text-center fixture_table active'><tbody>")
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="fixture-name">@Model?.Results.matches[i].homeTeam.name</span>
+                                        </td>
+                                        <td>
+                                            <span class="@fixturecolor">@Model?.Results.matches[i].score.fullTime.homeTeam - @Model?.Results.matches[i].score.fullTime.awayTeam</span>
+                                        </td>
+                                        <td>
+                                            <span class="fixture-name">@Model?.Results.matches[i].awayTeam.name</span>
+                                        </td>
+                                    </tr>
+                                }
+
+
+                                @if (date != Model?.Results.matches[i].utcDate.ToString().Substring(0, 10))
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="fixture-name">@Model?.Results.matches[i].homeTeam.name</span>
+                                        </td>
+                                        <td>
+                                            <span class="@fixturecolor">@Model?.Results.matches[i].score.fullTime.homeTeam - @Model?.Results.matches[i].score.fullTime.awayTeam</span>
+                                        </td>
+                                        <td>
+                                            <span class="fixture-name">@Model?.Results.matches[i].awayTeam.name</span>
+                                        </td>
+                                    </tr>
+
+                                }
+                                @if (i == 0)
+                                {
+                                    @Html.Raw("</tbody></table></div>")
+                                }
+                                date = Model?.Results.matches[i].utcDate.ToString().Substring(0, 10);
+                            }
+                            @if (Model == null)
+                            {
+                                <div class="col-md-12">
+                                    <p>Results are not available for this competition right now.</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="squad" role="tabpanel" aria-labelledby="squad-tab">
+                        <div class="row player">
+                            <div class="col-md-12">
+                                <table class="table">
+                                    <thead class="squad-thead">
+                                        <tr>
+                                            <th scope="col">
+                                                &nbsp;
+                                            </th>
+                                            <th scope="col">
+                                                Player
+                                            </th>
+                                            <th scope="col" class="">
+                                                Position
+                                            </th>
+                                            <th scope="col" class="d-none d-sm-table-cell">
+                                                Nationality
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.TeamDetail.squad)
+                                        {
+                                            <tr>
+                                                <th scope="row">
+                                                    &nbsp;
+                                                </th>
+                                                <th scope="row">
+                                                    @item.name
+                                                </th>
+                                                <td class="">@item.position</td>
+                                                <td class="d-none d-sm-table-cell">@item.nationality</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>

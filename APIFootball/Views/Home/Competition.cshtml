@@ -1,0 +1,340 @@
+﻿@{
+    ViewData["Title"] = "Comp Page";
+}
+
+@model APIFootball.Models.CompetitionViewModel
+@{
+    string date = "";
+}
+<style>
+    .fixtureslist td {
+        width: 33%;
+    }
+
+    .bold {
+        font-weight: bolder;
+        color: black;
+    }
+
+    .standing td {
+        color: #15222fc2;
+    }
+
+    .nodecoration {
+        text-decoration: none !important;
+        color: #15222fc2;
+    }
+
+    .clublist {
+        float: left;
+    }
+    .clubul{
+        list-style: none
+    }
+    .badge-image{
+        height:3.5em;
+    }
+</style>
+<div class="row">
+    <section class="col-md-12">
+        <div class="row pad-1em">
+            <div class="col-12 competition-name">
+                <h3>@Model?.Fixtures.competition.name</h3>
+            </div>
+            @if(new int[] { 2021, 2002, 2014, 2019, 2015 }.Contains(Model.Fixtures.competition.id))
+            {
+                <div class="row">
+                <ul class="clubul" role="menu">
+                    @foreach (var item in Model?.Teams?.teams)
+                    {
+                        <li class="clublist">
+                            <a target="" href="/Team/@item.id" role="menuitem">
+                                <div class="badge">
+                                    <img title="@item.shortName" class="badge-image transition" src="@item.crestUrl">
+                                </div>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+            }
+            
+        </div>
+        <div class="row section">
+            <div class="col-md-6 title-divider">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="fixture-tab" data-toggle="tab" href="#fixture" role="tab" aria-controls="fixture" aria-selected="true">Fixtures</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="result-tab" data-toggle="tab" href="#result" role="tab" aria-controls="result" aria-selected="false">Results</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="fixture" role="tabpanel" aria-labelledby="fixture-tab">
+                        <div class="row fixtureslist">
+                            @for (var i = 0; i < Model?.Fixtures.matches.Count; i++)
+                            {
+                                @if (i != 0 && date != Model?.Fixtures.matches[i].utcDate.ToString().Substring(0, 10))
+                                {
+                                    @Html.Raw("</tbody></table></div>")
+                                }
+                                @if (date != Model?.Fixtures.matches[i].utcDate.ToString().Substring(0, 10))
+                                {
+                                    @Html.Raw("<div class='col-md-12'>")
+                                    <h5 class="text-center fixture-result">@Model?.Fixtures.matches[i].utcDate.ToLocalTime().ToLongDateString()</h5>
+                                    @Html.Raw("<table class='table table-striped text-center fixture_table active'><tbody>")
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="fixture-name">@Model?.Fixtures.matches[i].homeTeam.name</span>
+                                        </td>
+                                        <td>
+                                            <span class="fixture-time">@Model?.Fixtures.matches[i].utcDate.ToLocalTime().ToShortTimeString()</span>
+                                        </td>
+                                        <td>
+                                            <span class="fixture-name">@Model?.Fixtures.matches[i].awayTeam.name</span>
+                                        </td>
+                                    </tr>
+                                }
+
+
+                                @if (date != Model?.Fixtures.matches[i].utcDate.ToString().Substring(0, 10))
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="fixture-name">@Model?.Fixtures.matches[i].homeTeam.name</span>
+                                        </td>
+                                        <td>
+                                            <span class="fixture-time">@Model?.Fixtures.matches[i].utcDate.ToLocalTime().ToShortTimeString()</span>
+                                        </td>
+                                        <td>
+                                            <span class="fixture-name">@Model?.Fixtures.matches[i].awayTeam.name</span>
+                                        </td>
+                                    </tr>
+
+                                }
+                                @if (i == Model?.Fixtures.matches.Count - 1)
+                                {
+                                    @Html.Raw("</tbody></table></div>")
+                                }
+                                date = Model?.Fixtures.matches[i].utcDate.ToString().Substring(0, 10);
+                            }
+                            @if (Model == null)
+                            {
+                                <div class="col-md-12">
+                                    <p>Fixtures are not available for this competition right now.</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="result" role="tabpanel" aria-labelledby="result-tab">
+                        <div class="row fixtureslist">
+                            @for (int i = (int)Model?.Results.matches.Count-1; i >= 0; i--)
+                            {
+                                @if (i != (int)Model?.Results.matches.Count-1 && date != Model?.Results.matches[i].utcDate.ToString().Substring(0, 10))
+                                {
+                                    @Html.Raw("</tbody></table></div>")
+                                }
+                                @if (date != Model?.Results.matches[i].utcDate.ToString().Substring(0, 10))
+                                {
+                                    @Html.Raw("<div class='col-md-12'>")
+                                    <h5 class="text-center fixture-result">@Model?.Results.matches[i].utcDate.ToLocalTime().ToLongDateString()</h5>
+                                    @Html.Raw("<table class='table table-striped text-center fixture_table active'><tbody>")
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="fixture-name">@Model?.Results.matches[i].homeTeam.name</span>
+                                        </td>
+                                        <td>
+                                            <a class="nodecoration" href="/Match/@Model?.Results.matches[i].id"><span class="fixture-time">@Model?.Results.matches[i].score.fullTime.homeTeam - @Model?.Results.matches[i].score.fullTime.awayTeam</span></a>
+                                        </td>
+                                        <td>
+                                            <span class="fixture-name">@Model?.Results.matches[i].awayTeam.name</span>
+                                        </td>
+                                    </tr>
+                                }
+
+
+                                @if (date != Model?.Results.matches[i].utcDate.ToString().Substring(0, 10))
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="fixture-name">@Model?.Results.matches[i].homeTeam.name</span>
+                                        </td>
+                                        <td>
+                                            <a class="nodecoration" href="/Match/@Model?.Results.matches[i].id"><span class="fixture-time">@Model?.Results.matches[i].score.fullTime.homeTeam - @Model?.Results.matches[i].score.fullTime.awayTeam</span></a>
+                                        </td>
+                                        <td>
+                                            <span class="fixture-name">@Model?.Results.matches[i].awayTeam.name</span>
+                                        </td>
+                                    </tr>
+
+                                }
+                                @if (i == 0)
+                                {
+                                    @Html.Raw("</tbody></table></div>")
+                                }
+                                date = Model?.Results.matches[i].utcDate.ToString().Substring(0, 10);
+                            }
+                            @if (Model == null)
+                            {
+                                <div class="col-md-12">
+                                    <p>Results are not available for this competition right now.</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 title-divider">
+                <div class="row  title">
+                    <div class="col-md-4">
+                        <div class="">
+                            <h3>
+                                Standings
+                                <i class="fas fa-bars"></i>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        @if (Model == null || Model?.Table == null)
+                        {
+                            <p>Standings are not available for this competition right now.</p>
+                        }
+                        else if (Model?.Table?.competition?.id == 2001)
+                        {
+                            @for (var i = 2; i < Model.Table.standings.Count-1; i++)
+                            {
+                                <h5 class="text-center">@Model.Table.standings[i].group</h5>
+                                <table class="table text-center font-weight-bold standing">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">
+                                                #
+                                            </th>
+                                            <th scope="col" width="45%">
+                                                Team
+                                            </th>
+                                            <th scope="col">
+                                                PL
+                                            </th>
+                                            <th scope="col" class="d-none d-sm-table-cell">
+                                                W
+                                            </th>
+                                            <th scope="col" class="d-none d-sm-table-cell">
+                                                D
+                                            </th>
+                                            <th scope="col" class="d-none d-sm-table-cell">
+                                                L
+                                            </th>
+                                            <th scope="col">
+                                                GD
+                                            </th>
+                                            <th scope="col">
+                                                Pts
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model?.Table?.standings?[i]?.table)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @item.position
+                                                </td>
+                                                <td style="text-align:left">
+                                                    <a href="/Team/@item.team.id" class="nodecoration">
+                                                        <img src="@item.team.crestUrl" height="30" width="30"> &nbsp; @item.team.name.Replace(" FC","")
+                                                    </a>
+                                                </td>
+                                                <td>@item.playedGames</td>
+                                                <td class="d-none d-sm-table-cell">@item.won</td>
+                                                <td class="d-none d-sm-table-cell">@item.draw</td>
+                                                <td class="d-none d-sm-table-cell">@item.lost</td>
+                                                <td>@item.goalDifference</td>
+                                                <td class="bold">@item.points</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+
+
+                        }
+                        else
+                        {
+                            <table class="table text-center font-weight-bold standing">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">
+                                            #
+                                        </th>
+                                        <th scope="col" width="45%">
+                                            Team
+                                        </th>
+                                        <th scope="col">
+                                            PL
+                                        </th>
+                                        <th scope="col" class="d-none d-sm-table-cell">
+                                            W
+                                        </th>
+                                        <th scope="col" class="d-none d-sm-table-cell">
+                                            D
+                                        </th>
+                                        <th scope="col" class="d-none d-sm-table-cell">
+                                            L
+                                        </th>
+                                        <th scope="col" class="d-none d-sm-table-cell">
+                                            F
+                                        </th>
+                                        <th scope="col" class="d-none d-sm-table-cell">
+                                            A
+                                        </th>
+                                        <th scope="col">
+                                            GD
+                                        </th>
+                                        <th scope="col">
+                                            Pts
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model?.Table?.standings?[0]?.table)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @item.position
+                                            </td>
+                                            <td style="text-align:left">
+                                                <a href="/Team/@item.team.id" class="nodecoration">
+                                                    <img src="@item.team.crestUrl" height="30" width="30"> &nbsp; @item.team.name.Replace(" FC","")
+                                                </a>
+                                            </td>
+                                            <td>@item.playedGames</td>
+                                            <td class="d-none d-sm-table-cell">@item.won</td>
+                                            <td class="d-none d-sm-table-cell">@item.draw</td>
+                                            <td class="d-none d-sm-table-cell">@item.lost</td>
+                                            <td class="d-none d-sm-table-cell">@item.goalsFor</td>
+                                            <td class="d-none d-sm-table-cell">@item.goalsAgainst</td>
+                                            <td>@item.goalDifference</td>
+                                            <td class="bold">@item.points</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model APIFootball.Models.TeamViewModel
+<style>
+    .clubdiv{
+            text-align-last: center;
+            padding: 1em 1em;
+    }
+    .clubdiv:hover{
+        background: #7a129752;
+    }
+    .clubimg{
+        height:5em;
+        width:auto;
+    }
+    .club-name{
+        color:black;
+        padding: 10px 0px;
+    }
+    .club-link{
+        text-decoration:none !important;
+    }
+
+    .competition-name{
+        color: white;
+    padding: 10px 10px;
+    text-align: center;
+    background-image: linear-gradient(90deg, #883f97, #70168a );
+    }
+</style>
+<div class="row">
+    <section class="col-md-12">
+        <div class="row section title-divider" style="padding-top:0">
+            <div class=" col-md-12">
+                <div class="row title pad-1em">
+                    <div class="col-md-6">
+                        <h3>Competitions</h3>
+                    </div>
+                </div>
+            </div>
+
+            @foreach (var item in Model.Teams)
+            {
+                <div class="row">
+                    <div class="col-12 competition-name">
+                        <h5>@item.competition.name</h5>
+                    </div>
+                    <div class="row">
+                        @for (var i = 0; i < 8; i++)
+                        {
+                            <div class="col-md-3 col-lg-2 col-6">
+                                <a href="/Team/@item.teams[i].id" class="club-link">
+                                    <div class="clubdiv">
+                                        <img src="@item.teams[i]?.crestUrl" class="clubs_logo clubimg" alt="">
+                                        <h6 class="text-center name-title club-name">@item.teams[i]?.name</h6>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                        <div class="col-md-3 col-lg-2 col-6" style="align-self: center;">
+                                <a href="/Competition/@item.competition.id" class="club-link">
+                                    <div class="clubdiv" style="/* border: 1px solid #803192; *//* background: #88579340; */">
+                                        <h6 class="text-center name-title club-name" style="background: #b586bf;">See All</h6>
+                                    </div>
+                                </a>
+                            </div>
+                        @*@foreach (var clubs in item.teams)
+                        {
+                            <div class="col-md-3 col-lg-2 col-6">
+                                <a href="/Team/@clubs.id" class="club-link">
+                                    <div class="clubdiv">
+                                        <img src="@clubs?.crestUrl" class="clubs_logo clubimg" alt="">
+                                        <h6 class="text-center name-title club-name">@clubs?.name</h6>
+                                    </div>
+                                </a>
+                            </div>
+                        }*@
+                    </div>
+
+                </div>
+            }
+        </div>
+    </section>
+</div>
